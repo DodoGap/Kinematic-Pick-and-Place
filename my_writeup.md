@@ -23,8 +23,6 @@
 [image4]: ./imgs/fk.png
 [image5]: ./imgs/l21-l-inverse-kinematics-new-design-fixed.png
 
-## [Rubric](https://review.udacity.com/#!/rubrics/972/view) Points
-### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
 ### Writeup / README
@@ -97,15 +95,16 @@ Below is the code I used to calculate Inverse Kinematic
   theta2 = pi/2 - angle_a - atan2(WC[2] - 0.75, sqrt(WC[0] * WC[0] + WC[1] * WC[1]) - 0.35) 
 
   theta3 = pi/2 - (angle_b + 0.036) # 0.036 accounts for sag in link4 of -0.054m
-```
+  
+  R0_3 = T0_1[0:3,0:3] * T1_2[0:3,0:3] * T2_3[0:3,0:3]
+  R0_3 = R0_3.evalf(subs={q1: theta1, q2:theta2, q3: theta3})
 
+  R3_6 = R0_3.transpose() * ROT_EE
 
-## Project Implementation
-
-#### 1. Fill in the `IK_server.py` file with properly commented python code for calculating Inverse Kinematics based on previously performed Kinematic Analysis. Your code must guide the robot to successfully complete 8/10 pick and place cycles. Briefly discuss the code you implemented and your results. 
-
-
-Here I'll talk about the code, what techniques I used, what worked and why, where the implementation might fail and how I might improve it if I were going to pursue this project further.  
+  theta4 = atan2(R3_6[2,2], -R3_6[0,2])
+  theta5 = atan2(sqrt(R3_6[0,2]*R3_6[0,2] + R3_6[2,2]*R3_6[2,2]), R3_6[1,2])
+  theta6 = atan2(-R3_6[1,1], R3_6[1,0])
+``` 
 
 
 Below are pictures of successed picked and dropped cylinders, some runs had troubles and didnt succed every time but 7 out of 10 times was very rare, but sometimes happend
